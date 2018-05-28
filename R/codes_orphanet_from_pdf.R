@@ -13,6 +13,10 @@ liste_codes <- u[3:length(u)] %>%
   stringr::str_extract_all('[0-9]{2,}') %>% 
   purrr::flatten_chr() %>% 
   .[! (substr(.,1,2) %in% c('29', '43'))] %>% 
+  .[. != '2018'] %>% 
+  .[. != '12'] %>% 
   unique()
 
 readr::write_tsv(as.data.frame(liste_codes), '~/Documents/Developpements/Github/orpha/data/liste_codes_janvier_2018.txt')
+
+
