@@ -21,7 +21,7 @@ parse_orpha <- function(x){
     filter(!is.na(val)) %>%
     tidyr::spread(var, val)
 }
- 
+
 parse_orpha(13)
 
 ## A tibble: 1 x 10
