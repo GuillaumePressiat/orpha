@@ -24,13 +24,15 @@ parse_orpha <- function(x){
 
 parse_orpha(13)
 
-## A tibble: 1 x 10
-#   code  age_apparition           cim   GARD  MedDRA MeSH    OMIM   prevalence synonymes                                        UMLS  
-#   <chr> <chr>                    <chr> <chr> <chr>  <chr>   <chr>  <chr>      <chr>                                            <chr> 
-# 1 13    Petite enfance, Néonatal E70.1 5682  -      C535325 261640 Inconnu    Hyperphénylalaninémie par déficit en 6-pyruvoyl… C0878…
+# A tibble: 1 x 11
+# code  libelle                                          age_apparition           cim   GARD  MedDRA MeSH    OMIM   prevalence synonymes                                                                  UMLS    
+# <chr> <chr>                                            <chr>                    <chr> <chr> <chr>  <chr>   <chr>  <chr>      <chr>                                                                      <chr>   
+#   1 13    Déficit en 6-pyruvoyl-tétrahydroptérine synthase Petite enfance, Néonatal E70.1 5682  -      C535325 261640 Inconnu    Hyperphénylalaninémie par déficit en 6-pyruvoyl-tétrahydroptérine synthase C0878676
 
 
-codes <- list.files('python/res')
+codes <- list.files('python/res') %>% sort
 
 # test
-tibble_orpha.net <- codes[1:1000] %>% purrr::map(parse_orpha) %>% bind_rows
+tibble_orpha.net <- codes %>% purrr::map(parse_orpha) %>% bind_rows
+
+readr::write_csv(tibble_orpha.net, 'data/test.csv')
