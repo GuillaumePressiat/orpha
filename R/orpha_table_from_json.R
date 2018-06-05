@@ -24,13 +24,11 @@ z <- dplyr::as_tibble(uu) %>%
   tidyr::gather(key, val, - id, - OrphaNumber) %>%
   mutate(multiple = purrr::map(val, 'count'),
          lang = purrr::map(val, 'lang')) %>%
-  filter(multiple != 'NULL') %>%
-  mutate(multiple = as.integer(multiple)) %>%
-  filter(multiple > 0) %>%
   mutate(
     contenu =
       case_when(key == 'SynonymList'  ~ purrr::map(val, 'Synonym'),
                 key == 'DisorderFlagList'  ~ purrr::map(val, 'DisorderFlag'),
+                key == 'DisorderType'  ~ val,
                 key == 'ExternalReferenceList' ~ purrr::map(val, 'ExternalReference'),
                 key == 'DisorderDisorderAssociationList' ~ purrr::map(val, 'DisorderDisorderAssociation'),
                 key == 'TextualInformationList' ~ purrr::map(val, 'TextualInformation')))
@@ -43,6 +41,7 @@ extract_element <- function(cc, el){purrr::flatten(purrr::modify_depth(cc, 2, el
 
 y <- z %>%
   filter(key == 'SynonymList') %>%
+  filter(multiple > 0) %>% 
   select(id, OrphaNumber, contenu) %>%
   group_by(id, OrphaNumber) %>%
   mutate(lang  = extz(extract_element(contenu, 'lang')),
@@ -61,6 +60,7 @@ x <- z %>%
 
 refs2 <- z %>%
   filter(key == 'ExternalReferenceList') %>%
+  filter(multiple > 0) %>% 
   select(id, OrphaNumber, contenu) %>%
   group_by(id, OrphaNumber) %>%
   mutate(idd  = extz(extract_element(contenu, 'id')),
@@ -82,24 +82,29 @@ refs <- refs3 %>%
   summarise(References = paste0(References, collapse = " ; ")) %>%
   tidyr::spread(Source, References, fill = "")
 
+
+types <- z %>%
+  filter(key == 'DisorderType') %>%
+  select(id, OrphaNumber, contenu) %>%
+  group_by(id, OrphaNumber) %>% 
+  mutate(Type = extz(purrr::map(contenu, 'Name') %>% purrr::modify_depth(2, 'label')))
+
 assocs <- z %>%
   filter(key == 'DisorderDisorderAssociationList') %>%
+  filter(multiple > 0) %>% 
   select(id, OrphaNumber, contenu) %>%
-  group_by(id, OrphaNumber) %>%
-  mutate(Disorder1  = extz(purrr::flatten(purrr::modify_depth(contenu, 2, 'Disorder1'))),
-         Disorder2 = extz(purrr::flatten(purrr::modify_depth(contenu, 2, 'Disorder2')))) %>%
-  select(-contenu)
+  group_by(id, OrphaNumber)
 
 textes  <- z %>%
   filter(key == 'TextualInformationList') %>%
   select(id, OrphaNumber, contenu) %>%
   group_by(id, OrphaNumber) %>%
-  mutate(idd  = extz(purrr::flatten(purrr::modify_depth(contenu, 2, 'id'))),
-         texte = extz(purrr::flatten(purrr::modify_depth(contenu, 2, 'TextSectionList')))) %>%
-  select(-contenu)
+  mutate(idd  = purrr::flatten(purrr::modify_depth(contenu, 2, 'id')),
+         texte = purrr::modify_depth(contenu, 2, 'TextSectionList'))
 
 # Constitution d'une table avec les éléments présentables sous la forme d'un tableau
 orpha_table <- list(w ,
+                    types %>% select(id, OrphaNumber, Type),
                     x %>% select(-idd, -nb) %>% rename(statut = label),
                     y %>% select(-lang) %>% rename(Synonymes = label) %>% mutate(nsyn = unlist(nsyn)),
                     refs) %>%
@@ -111,3 +116,5 @@ glimpse(orpha_table)
 readr::write_tsv(orpha_table, 'data/orpha_table.tsv', na = "")
 readr::write_csv(orpha_table, 'data/orpha_table.csv', na = "")
 readr::write_delim(orpha_table, 'data/orpha_table_comma.csv', na = "", delim = ";")
+
+

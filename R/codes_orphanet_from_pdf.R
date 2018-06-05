@@ -25,6 +25,6 @@ liste_codes <- u[3:length(u)] %>%
   # .[. != '12'] %>% 
   unique()
 
-readr::write_tsv(as.data.frame(liste_codes), '~/Documents/Developpements/Github/orpha/data/liste_codes_janvier_2018.txt')
+readr::write_tsv(as.data.frame(liste_codes), 'data/liste_codes_janvier_2018.txt')
 
 

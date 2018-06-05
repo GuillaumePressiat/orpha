@@ -36,4 +36,4 @@ codes <- list.files('python/res') %>% sort
 # test
 tibble_orpha.net <- codes %>% purrr::map(parse_orpha) %>% bind_rows
 
-readr::write_csv(tibble_orpha.net, 'data/test.csv')
+readr::write_csv(arrange(tibble_orpha.net, as.numeric(code)), 'data/from_orpha.net.csv')
