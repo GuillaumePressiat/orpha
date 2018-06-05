@@ -75,4 +75,4 @@ Ce fichier est disponible aux formats csv tsv et csv comma.
 - [tsv](https://github.com/GuillaumePressiat/orpha/blob/master/data/orpha_table.tsv)
 - [comma csv ou csv2 ;](https://github.com/GuillaumePressiat/orpha/blob/master/data/orpha_table_comma.csv)
 
-J'ai réalisé cette extraction le 05/06/2018.
+J'ai réalisé cette structuration sous forme de table le 05/06/2018.
