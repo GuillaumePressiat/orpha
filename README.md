@@ -4,11 +4,49 @@
 
 ## Harvesting des données sur orphanet (python selenium)
 
-Première option : avec selenium on récupère les informations du site (python et premier projet selenium pour moi).
+**Première option :** avec selenium on récupère les informations présentées sur le site (python notebook et premier projet [selenium](https://fr.wikipedia.org/wiki/Selenium_(informatique)) pour moi).
+
+Les informations suivantes sont récupérées, par exemple pour le code :
+
+```
+ORPHA:370927  SSR4-CDG
+Plus d'informations
+Synonyme(s) : Anomalie congénitale de la glycosylation type 1y ; Anomalie congénitale de la glycosylation type Iy ; CDG-Iy ; CDG1Y ; Syndrome CDG type Iy ; Syndrome des glycoprotéines déficientes en hydrates de carbone type Iy
+--
+Détails
+--
+Synonyme(s) :
+Anomalie congénitale de la glycosylation type 1y
+Anomalie congénitale de la glycosylation type Iy
+CDG-Iy
+CDG1Y
+Syndrome CDG type Iy
+Syndrome des glycoprotéines déficientes en hydrates de carbone type Iy
+Prévalence : <1 / 1 000 000
+Hérédité : Récessive liée à l'X 
+Âge d'apparition : Petite enfance, Néonatal
+CIM-10 : E77.8
+OMIM : 300934
+UMLS : -
+MeSH : -
+GARD : 12405
+MedDRA : -
+```
+
+Et on peut structurer ces données sous forme d'une table ensuite (pgm parse_orpha.R), exemple sur ce même code :
+
+```
+# A tibble: 1 x 11
+  code   libelle  age_apparition           cim   GARD  MedDRA MeSH  OMIM   prevalence     synonymes                            UMLS 
+  <chr>  <chr>    <chr>                    <chr> <chr> <chr>  <chr> <chr>  <chr>          <chr>                                <chr>
+1 370927 SSR4-CDG Petite enfance, Néonatal E77.8 12405 -      -     300934 <1 / 1 000 000 Anomalie congénitale de la glycosyl… -  
+```
+
+Inconvénient : c'est long.
 
 ## Import du fichier json disponible sur orphadata  (R)
 
-Deuxième option : on importe le json téléchargeable [ici](http://www.orphadata.org/cgi-bin/inc/product1.inc.php) et on le structure sous la forme d'un fichier tabulaire contenant les informations suivantes :
+**Deuxième option :** on importe le json téléchargeable [ici](http://www.orphadata.org/cgi-bin/inc/product1.inc.php) et on le structure sous la forme d'un fichier tabulaire contenant les informations suivantes :
 
 ```r
 glimpse(arrange(orpha_table, as.integer(OrphaNumber)))

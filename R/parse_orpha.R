@@ -22,8 +22,9 @@ parse_orpha <- function(x){
     tidyr::spread(var, val)
 }
 
-parse_orpha(13)
+# parse_orpha(370927)
 
+parse_orpha(13)
 # A tibble: 1 x 11
 # code  libelle                                          age_apparition           cim   GARD  MedDRA MeSH    OMIM   prevalence synonymes                                                                  UMLS    
 # <chr> <chr>                                            <chr>                    <chr> <chr> <chr>  <chr>   <chr>  <chr>      <chr>                                                                      <chr>   
