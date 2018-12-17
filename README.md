@@ -75,4 +75,12 @@ Ce fichier est disponible aux formats csv tsv et csv comma.
 - [tsv](https://github.com/GuillaumePressiat/orpha/blob/master/data/orpha_table.tsv)
 - [comma csv ou csv2 ;](https://github.com/GuillaumePressiat/orpha/blob/master/data/orpha_table_comma.csv)
 
-J'ai réalisé cette structuration sous forme de table le 05/06/2018.
+
+### Version
+
+```r
+> u$JDBOR$version
+[1] "1.2.11 / 4.1.6 [2018-04-12] (orientdb version)"
+> u$JDBOR$date
+[1] "2018-12-01 04:13:48"
+```

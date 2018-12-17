@@ -2,6 +2,8 @@ library(dplyr, warn.conflicts = FALSE)
 
 u <- jsonlite::read_json('http://www.orphadata.org/data/export/fr_product1.json', simplifyVector = TRUE)
 
+# u$JDBOR$version
+# u$JDBOR$date
 uu <- u$JDBOR$DisorderList[[1]]$Disorder[[1]]
 names(u$JDBOR$DisorderList[[1]]$Disorder[[1]]) %>% cat(sep = "\n")
 
@@ -113,8 +115,10 @@ orpha_table <- list(w ,
 
 glimpse(orpha_table)
 
-readr::write_tsv(orpha_table, 'data/orpha_table.tsv', na = "")
-readr::write_csv(orpha_table, 'data/orpha_table.csv', na = "")
-readr::write_delim(orpha_table, 'data/orpha_table_comma.csv', na = "", delim = ";")
+library(stringfix)
+date_orpha_version <- lubridate::date(u$JDBOR$date)
+readr::write_tsv(orpha_table, 'data/orpha_table_' %+% date_orpha_version %+% '.tsv', na = "")
+readr::write_csv(orpha_table, 'data/orpha_table_comma_' %+% date_orpha_version %+% '.csv', na = "")
+readr::write_delim(orpha_table, 'data/orpha_table_semicolon_' %+% date_orpha_version %+% '.csv', na = "", delim = ";")
 
 
