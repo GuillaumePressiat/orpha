@@ -1,6 +1,7 @@
 library(dplyr, warn.conflicts = FALSE)
 
-u <- jsonlite::read_json('http://www.orphadata.org/data/export/fr_product1.json', simplifyVector = TRUE)
+langage_param <- 'en'
+u <- jsonlite::read_json(glue::glue('http://www.orphadata.org/data/export/{langage_param}_product1.json', langage_param = langage_param), simplifyVector = TRUE)
 
 # u$JDBOR$version
 # u$JDBOR$date
@@ -97,12 +98,12 @@ assocs <- z %>%
   select(id, OrphaNumber, contenu) %>%
   group_by(id, OrphaNumber)
 
-textes  <- z %>%
-  filter(key == 'TextualInformationList') %>%
-  select(id, OrphaNumber, contenu) %>%
-  group_by(id, OrphaNumber) %>%
-  mutate(idd  = purrr::flatten(purrr::modify_depth(contenu, 2, 'id')),
-         texte = purrr::modify_depth(contenu, 2, 'TextSectionList'))
+# textes  <- z %>%
+#   filter(key == 'TextualInformationList') %>%
+#   select(id, OrphaNumber, contenu) %>%
+#   group_by(id, OrphaNumber) %>%
+#   mutate(idd  = purrr::flatten(purrr::modify_depth(contenu, 2, 'id')),
+#          texte = purrr::modify_depth(contenu, 2, 'TextSectionList'))
 
 # Constitution d'une table avec les éléments présentables sous la forme d'un tableau
 orpha_table <- list(w ,
@@ -117,8 +118,8 @@ glimpse(orpha_table)
 
 library(stringfix)
 date_orpha_version <- lubridate::date(u$JDBOR$date)
-readr::write_tsv(orpha_table, 'data/orpha_table_' %+% date_orpha_version %+% '.tsv', na = "")
-readr::write_csv(orpha_table, 'data/orpha_table_comma_' %+% date_orpha_version %+% '.csv', na = "")
-readr::write_delim(orpha_table, 'data/orpha_table_semicolon_' %+% date_orpha_version %+% '.csv', na = "", delim = ";")
+readr::write_tsv(orpha_table, 'data/orpha_table_' %+% langage_param %+% '_' %+% date_orpha_version %+% '.tsv', na = "")
+readr::write_csv(orpha_table, 'data/orpha_table_comma_' %+% langage_param %+% '_' %+% date_orpha_version %+% '.csv', na = "")
+readr::write_delim(orpha_table, 'data/orpha_table_semicolon_'  %+% langage_param %+% '_' %+%  date_orpha_version %+% '.csv', na = "", delim = ";")
 
 
