@@ -9,7 +9,7 @@ Goal is to have tabular data.
 ### json file import and tabulation (R)
 
 We import json file [from here](http://www.orphadata.org/cgi-bin/inc/product1.inc.php) and make a table containing theses columns:
-Multiples records like synonymes are concatened with a " ; ".
+
 
 ```r
 glimpse(arrange(orpha_table, as.integer(OrphaNumber)))
@@ -32,6 +32,8 @@ $ MeSH        <chr> "", "C535308", "C535313", "C535317 ; D014997", "C536502", "D
 $ OMIM        <chr> "609016", "210200 ; 210210", "220210 ; 300963", "", "", "", "", "261640", "200100", "100800", "303700", "245400", "179800 ; 267...
 $ UMLS        <chr> "C0342786 ; C1969443", "C0268600", "C0796137", "C3266843 ; C0043379", "C0265496", "C2936741", "C2937419 ; C0265497", "C0878676"...
 ```
+
+Multiples records like synonymes are concatened with a " ; ".
 
 The file is available as: csv tsv or csv comma.
 
